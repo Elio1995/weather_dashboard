@@ -1,4 +1,7 @@
 .center-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     margin: 10px
 }
 
@@ -34,6 +37,19 @@ button:hover {
     background-color: #0056b3;
 }
 
+@media (max-width: 650px) {
+    .center-container {
+        flex-direction: column;
+        gap: 10px
+    }
+
+    input,
+    button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 /* Style for Current Weather and Forecast */
 .weather-info {
     background-color: #fff;
@@ -54,6 +70,9 @@ button:hover {
 }
 
 .weather-info ul {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
     list-style-type: none;
     padding: 0;
 }
@@ -88,18 +107,24 @@ button:hover {
 }
 
 @media (max-width: 1200px) {
+
+    .weather-info ul,
     .cities-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 900px) {
+
+    .weather-info ul,
     .cities-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 600px) {
+
+    .weather-info ul,
     .cities-grid {
         grid-template-columns: 1fr;
     }
