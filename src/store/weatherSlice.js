@@ -8,6 +8,7 @@ const initialState = {
   historicalWeather: [],
   status: 'idle',
   error: null,
+  isCelsius:false
 };
 
 export const fetchCities = createAsyncThunk(
@@ -38,7 +39,6 @@ export const fetchForecast = createAsyncThunk(
     const forecastCityWeather = searchedForecastByCity.map((historical) => ({
       ...historical,
       forecast: historical.forecast.filter((day) =>{
-        console.log(moment(day.date, 'YYYY-MM-DD').isSameOrAfter(moment()))
         return moment(day.date, 'YYYY-MM-DD').isSameOrAfter(moment().format('YYYY-MM-DD'))
         }
       ),
@@ -68,7 +68,11 @@ export const fetchHistoricalWeather = createAsyncThunk(
 const weatherSlice = createSlice({
   name: 'weather',
   initialState,
-  reducers: {},
+  reducers: {
+    setIsCelsius: (state, action) => {
+      state.isCelsius = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCities.pending, (state) => {
@@ -117,4 +121,5 @@ const weatherSlice = createSlice({
   },
 });
 
+export const { setIsCelsius } = weatherSlice.actions;
 export default weatherSlice.reducer;
