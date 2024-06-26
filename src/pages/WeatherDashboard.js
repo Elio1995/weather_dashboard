@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCities, fetchWeather, fetchForecast } from '../store/weatherSlice';
+import { fetchCities, fetchWeather, fetchForecast, fetchHistoricalWeather } from '../store/weatherSlice';
+import moment from 'moment';
 import '../css/dashboard.css'
 
 const WeatherDashboard = () => {
@@ -16,6 +17,7 @@ const WeatherDashboard = () => {
     const handleSearch = () => {
         dispatch(fetchWeather(city));
         dispatch(fetchForecast(city));
+        dispatch(fetchHistoricalWeather(city))
     };
 
     const toggleTemperatureUnit = () => {
@@ -29,6 +31,12 @@ const WeatherDashboard = () => {
     const getTemperatureUnit = () => {
         return isCelsius ? '°C' : '°F';
     };
+
+    useEffect(() => {
+        if (city) handleSearch()
+    }, [city])
+
+    const formattedDate = (date) => moment(date).format('DD MMMM');
 
     return (
         <div>
@@ -62,7 +70,20 @@ const WeatherDashboard = () => {
                         {weather?.forecast?.map((cityForecast) => (
                             cityForecast?.forecast?.map((day) =>
                                 <li key={day.date}>
-                                    <p>Date: {day.date}</p>
+                                    <p>Date: {formattedDate(day.date)}</p>
+                                    <p>Temperature (Min): {convertTemperature(day.temperature.min)} {getTemperatureUnit()}</p>
+                                    <p>Temperature (Max): {convertTemperature(day.temperature.max)} {getTemperatureUnit()}</p>
+                                    <p>Condition: {day.conditions}</p>
+                                </li>
+                            )
+                        ))}
+                    </ul>
+                    <h2>Last Week Weather</h2>
+                    <ul>
+                        {weather?.historicalWeather?.map((cityForecast) => (
+                            cityForecast?.forecast?.map((day) =>
+                                <li key={day.date}>
+                                    <p>Date: {formattedDate(day.date)}</p>
                                     <p>Temperature (Min): {convertTemperature(day.temperature.min)} {getTemperatureUnit()}</p>
                                     <p>Temperature (Max): {convertTemperature(day.temperature.max)} {getTemperatureUnit()}</p>
                                     <p>Condition: {day.conditions}</p>
